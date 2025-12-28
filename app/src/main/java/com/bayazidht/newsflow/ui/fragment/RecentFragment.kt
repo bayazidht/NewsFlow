@@ -1,60 +1,55 @@
 package com.bayazidht.newsflow.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayazidht.newsflow.R
+import com.bayazidht.newsflow.data.RssParser
+import com.bayazidht.newsflow.databinding.FragmentRecentBinding
+import com.bayazidht.newsflow.ui.adapter.NewsAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class RecentFragment : Fragment(R.layout.fragment_recent) {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RecentFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class RecentFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentRecentBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var recentAdapter: NewsAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentRecentBinding.bind(view)
+
+        setupRecyclerView()
+        loadRecentNews()
+    }
+
+    private fun setupRecyclerView() {
+        recentAdapter = NewsAdapter(emptyList())
+        binding.rvRecent.apply {
+            adapter = recentAdapter
+            layoutManager = LinearLayoutManager(context)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recent, container, false)
-    }
+    private fun loadRecentNews() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val rssUrl = "https://www.aljazeera.com/xml/rss/all.xml"
+            val newsList = RssParser().fetchRss(rssUrl)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RecentFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            RecentFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+            withContext(Dispatchers.Main) {
+                if (newsList.isNotEmpty()) {
+                    recentAdapter.updateData(newsList)
                 }
             }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
