@@ -1,14 +1,14 @@
-package com.bayazidht.newsflow
+package com.bayazidht.newsflow.ui.activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bayazidht.newsflow.databinding.ActivityMainBinding
-
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.bayazidht.newsflow.R
+import com.bayazidht.newsflow.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

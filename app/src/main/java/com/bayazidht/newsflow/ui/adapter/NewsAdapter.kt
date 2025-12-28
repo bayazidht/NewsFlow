@@ -1,5 +1,6 @@
 package com.bayazidht.newsflow.ui.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -7,6 +8,7 @@ import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.data.NewsArticle
 import com.bumptech.glide.Glide
 import com.bayazidht.newsflow.databinding.ItemNewsCardBinding
+import com.bayazidht.newsflow.ui.activity.NewsDetailsActivity
 
 class NewsAdapter(private var newsList: List<NewsArticle>) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
@@ -29,6 +31,12 @@ class NewsAdapter(private var newsList: List<NewsArticle>) :
                 .load(article.imageUrl)
                 .placeholder(R.drawable.ic_newspaper)
                 .into(ivNewsImage)
+        }
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context, NewsDetailsActivity::class.java)
+            intent.putExtra("news_data", article)
+            holder.itemView.context.startActivity(intent)
         }
     }
 
