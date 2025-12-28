@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.bayazidht.newsflow.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_trending"
+        android:name="com.bayazidht.newsflow.TrendingFragment"
+        android:label="Trending"
+        tools:layout="@layout/fragment_trending" />
+
+    <fragment
+        android:id="@+id/navigation_recent"
+        android:name="com.bayazidht.newsflow.RecentFragment"
+        android:label="Recent"
+        tools:layout="@layout/fragment_recent" />
+
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.bayazidht.newsflow.AccountFragment"
+        android:label="Account"
+        tools:layout="@layout/fragment_account" />
+</navigation>
