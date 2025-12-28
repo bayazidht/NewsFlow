@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.bayazidht.newsflow.HomeFragment"
+        android:name="com.bayazidht.newsflow.ui.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_trending"
-        android:name="com.bayazidht.newsflow.TrendingFragment"
+        android:name="com.bayazidht.newsflow.ui.TrendingFragment"
         android:label="Trending"
         tools:layout="@layout/fragment_trending" />
 
     <fragment
         android:id="@+id/navigation_recent"
-        android:name="com.bayazidht.newsflow.RecentFragment"
+        android:name="com.bayazidht.newsflow.ui.RecentFragment"
         android:label="Recent"
         tools:layout="@layout/fragment_recent" />
 
     <fragment
         android:id="@+id/navigation_account"
-        android:name="com.bayazidht.newsflow.AccountFragment"
+        android:name="com.bayazidht.newsflow.ui.AccountFragment"
         android:label="Account"
         tools:layout="@layout/fragment_account" />
 </navigation>
