@@ -39,7 +39,7 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
 
     private fun loadTrendingNews() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val rssUrl = "https://feeds.bbci.co.uk/news/world/asia/rss.xml"
+            val rssUrl = "https://www.aljazeera.com/xml/rss/all.xml"
             val newsList = RssParser().fetchRss(rssUrl)
 
             withContext(Dispatchers.Main) {

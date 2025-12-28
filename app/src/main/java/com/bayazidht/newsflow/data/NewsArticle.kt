@@ -8,5 +8,6 @@ data class NewsArticle(
     val source: String,
     val time: String,
     val imageUrl: String,
-    val content: String
+    val content: String,
+    val articleUrl: String
 ): Serializable

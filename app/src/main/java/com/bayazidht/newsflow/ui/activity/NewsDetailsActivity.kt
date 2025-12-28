@@ -1,8 +1,10 @@
 package com.bayazidht.newsflow.ui.activity
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bayazidht.newsflow.R
@@ -34,6 +36,14 @@ class NewsDetailsActivity : AppCompatActivity() {
             binding.tvDetailsContent.text = it.content
 
             Glide.with(this).load(it.imageUrl).into(binding.ivDetailsImage)
+        }
+
+        binding.btnReadMore.setOnClickListener {
+            article?.articleUrl?.let { url ->
+                val builder = CustomTabsIntent.Builder()
+                val customTabsIntent = builder.build()
+                customTabsIntent.launchUrl(this, Uri.parse(url))
+            }
         }
 
         binding.btnBack.setOnClickListener { finish() }

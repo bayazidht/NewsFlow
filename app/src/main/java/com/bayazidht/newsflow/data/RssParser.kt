@@ -21,11 +21,13 @@ class RssParser {
             parser.setInput(connection.inputStream, "UTF-8")
 
             var eventType = parser.eventType
+            var category = ""
             var title = ""
             var image = ""
             var pubDate = ""
             var source = "NewsFlow"
             var description = ""
+            var link = ""
             var insideItem = false
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -36,6 +38,10 @@ class RssParser {
                             insideItem = true
                         } else if (insideItem) {
                             when {
+                                name.equals("category", true) || name.equals("dc:subject", true) -> {
+                                    val cat = parser.nextText()
+                                    if (!cat.isNullOrBlank()) category = cat
+                                }
                                 name.equals("title", true) -> title = parser.nextText()
                                 name.equals("pubDate", true) -> {
                                     val rawDate = parser.nextText()
@@ -44,6 +50,7 @@ class RssParser {
                                 name.equals("description", true) || name.equals("content:encoded", true) || name.equals("summary", true) -> {
                                     description = parser.nextText()
                                 }
+                                name.equals("link", true) -> link = parser.nextText()
                                 name.equals("source", true) -> source = parser.nextText()
                                 name.equals("enclosure", true) || name.equals("media:content", true) -> {
                                     val urlAttr = parser.getAttributeValue(null, "url")
@@ -63,15 +70,16 @@ class RssParser {
                                 val cleanContent = description.replace(Regex("<[^>]*>"), "").trim()
                                 articles.add(NewsArticle(
                                     title = title.trim(),
-                                    category = "LATEST",
+                                    category = category.uppercase(),
                                     source = source,
                                     time = pubDate,
                                     imageUrl = image,
-                                    content = cleanContent
+                                    content = cleanContent,
+                                    articleUrl = link
                                 ))
                             }
                             insideItem = false
-                            title = ""; image = ""; pubDate = ""; source = "NewsFlow"
+                            title = ""; image = ""; pubDate = ""; source = "NewsFlow"; description = ""; link = ""; category = "LATEST"
                         }
                     }
                 }

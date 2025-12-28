@@ -79,5 +79,15 @@
                 android:textColor="#444444"
                 android:textSize="16sp" />
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReadMore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="Read Full Article"
+            app:cornerRadius="8dp"
+            android:backgroundTint="#0052FF"/>
     </LinearLayout>
+
 </androidx.core.widget.NestedScrollView>
