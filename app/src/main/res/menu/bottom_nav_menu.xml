@@ -12,13 +12,13 @@
         android:title="Trending" />
 
     <item
-        android:id="@+id/navigation_recent"
-        android:icon="@drawable/ic_recent"
-        android:title="Recent" />
+        android:id="@+id/navigation_bookmarks"
+        android:icon="@drawable/ic_bookmarks"
+        android:title="Bookmarks" />
 
     <item
-        android:id="@+id/navigation_account"
-        android:icon="@drawable/ic_account"
-        android:title="Account" />
+        android:id="@+id/navigation_customize"
+        android:icon="@drawable/ic_customize"
+        android:title="Customize" />
 
 </menu>

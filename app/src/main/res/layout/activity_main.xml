@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".ui.activity.MainActivity">
 
     <RelativeLayout
@@ -21,7 +20,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="NewsFlow"
-            android:textColor="#0052FF"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -33,6 +31,7 @@
             android:orientation="horizontal">
 
             <ImageButton
+                app:tint="?attr/colorControlNormal"
                 android:id="@+id/btnSearch"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -41,6 +40,7 @@
                 android:src="@drawable/ic_search" />
 
             <ImageButton
+                app:tint="?attr/colorControlNormal"
                 android:id="@+id/btnNotification"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -65,7 +65,6 @@
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         app:elevation="12dp"
         app:itemIconSize="26dp"
         app:labelVisibilityMode="labeled"

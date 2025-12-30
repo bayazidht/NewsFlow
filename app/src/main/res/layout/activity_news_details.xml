@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,16 +19,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_newspaper" />
+                android:src="@drawable/news_placeholder" />
 
-            <ImageButton
-                android:id="@+id/btnBack"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnBackCard"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_margin="16dp"
-                android:background="@drawable/bg_circle"
-                android:src="@drawable/ic_back"
-                app:tint="@color/black" />
+                app:cardCornerRadius="25dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_back"
+                    app:tint="?attr/colorControlNormal"/>
+
+            </com.google.android.material.card.MaterialCardView>
         </RelativeLayout>
 
         <LinearLayout
@@ -43,7 +51,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="POLITICS"
-                android:textColor="#0052FF"
                 android:textStyle="bold" />
 
             <TextView
@@ -52,7 +59,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="News Title"
-                android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -61,14 +67,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="BBC News • 2h ago"
-                android:textColor="#757575" />
+                android:text="BBC News • 2h ago" />
 
             <View
+                android:alpha="0.5"
+                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="20dp"
-                android:background="#EEEEEE" />
+                android:background="?attr/colorControlNormal" />
 
             <TextView
                 android:id="@+id/tvDetailsContent"
@@ -76,7 +83,6 @@
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="8dp"
                 android:text="Detailed news content will appear here..."
-                android:textColor="#444444"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -85,9 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text="Read Full Article"
-            app:cornerRadius="8dp"
-            android:backgroundTint="#0052FF"/>
+            android:text="Read Full Article"/>
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_newspaper" />
+            android:src="@drawable/news_placeholder" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +31,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="POLITICS"
-                android:textColor="#0052FF"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -43,7 +42,6 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="The actual news title goes here for the user to read."
-                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -57,16 +55,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="BBC News • 2h ago"
-                    android:textColor="#757575"
                     android:textSize="12sp" />
 
                 <ImageView
+                    app:tint="?attr/colorControlNormal"
                     android:id="@+id/btnBookmark"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_bookmark_outline"
-                    app:tint="#757575" />
+                    android:src="@drawable/ic_bookmark_outline" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

@@ -38,11 +38,13 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
     }
 
     private fun loadTrendingNews() {
+        binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             val rssUrl = "https://www.aljazeera.com/xml/rss/all.xml"
             val newsList = RssParser().fetchRss(rssUrl)
 
             withContext(Dispatchers.Main) {
+                binding.progressBar.visibility = View.GONE
                 if (newsList.isNotEmpty()) {
                     val hero = newsList[0]
                     binding.tvHeroTitle.text = hero.title
@@ -50,7 +52,7 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
 
                     Glide.with(this@TrendingFragment)
                         .load(hero.imageUrl)
-                        .placeholder(R.drawable.ic_newspaper)
+                        .placeholder(R.drawable.news_placeholder)
                         .into(binding.ivHeroImage)
 
                     val subList = newsList.drop(1)

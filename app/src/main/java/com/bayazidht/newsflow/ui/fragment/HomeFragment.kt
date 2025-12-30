@@ -39,11 +39,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun loadLiveNews() {
+        binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch(Dispatchers.IO) {
             val rssUrl = "https://www.thedailystar.net/historical/front-page/rss.xml"
             val newsList = RssParser().fetchRss(rssUrl)
 
             withContext(Dispatchers.Main) {
+                binding.progressBar.visibility = View.GONE
                 if (newsList.isNotEmpty()) {
                     newsAdapter.updateData(newsList)
                 } else {

@@ -18,14 +18,14 @@
         tools:layout="@layout/fragment_trending" />
 
     <fragment
-        android:id="@+id/navigation_recent"
-        android:name="com.bayazidht.newsflow.ui.fragment.RecentFragment"
+        android:id="@+id/navigation_bookmarks"
+        android:name="com.bayazidht.newsflow.ui.fragment.BookmarksFragment"
         android:label="Recent"
-        tools:layout="@layout/fragment_recent" />
+        tools:layout="@layout/fragment_bookmarks" />
 
     <fragment
-        android:id="@+id/navigation_account"
+        android:id="@+id/navigation_customize"
         android:name="com.bayazidht.newsflow.ui.fragment.AccountFragment"
         android:label="Account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_customize" />
 </navigation>

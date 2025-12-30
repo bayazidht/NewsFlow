@@ -46,6 +46,6 @@ class NewsDetailsActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnBack.setOnClickListener { finish() }
+        binding.btnBackCard.setOnClickListener { finish() }
     }
 }

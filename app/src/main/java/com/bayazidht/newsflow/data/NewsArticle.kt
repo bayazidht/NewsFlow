@@ -1,9 +1,12 @@
 package com.bayazidht.newsflow.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.io.Serializable
 
+@Entity(tableName = "bookmarks")
 data class NewsArticle(
-    val title: String,
+    @PrimaryKey val title: String,
     val category: String,
     val source: String,
     val time: String,
@@ -11,3 +14,4 @@ data class NewsArticle(
     val content: String,
     val articleUrl: String
 ): Serializable
+
