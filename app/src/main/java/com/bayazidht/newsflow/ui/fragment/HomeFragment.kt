@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayazidht.newsflow.R
+import com.bayazidht.newsflow.data.NewsDataHolder
 import com.bayazidht.newsflow.data.NewsItem
 import com.bayazidht.newsflow.data.NewsSources
 import com.bayazidht.newsflow.data.RssParser
@@ -107,6 +108,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         newsAdapter.updateData(cachedNews)
                         binding.rvNews.scrollToPosition(0)
                         toggleViews(true)
+
+                        val updatedList = NewsDataHolder.allNewsList + cachedNews
+                        NewsDataHolder.allNewsList = updatedList.distinctBy { it.articleUrl }
                     } else {
                         cachedNews = emptyList()
                         newsAdapter.updateData(emptyList())

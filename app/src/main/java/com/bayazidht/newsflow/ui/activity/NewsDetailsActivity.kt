@@ -28,14 +28,14 @@ class NewsDetailsActivity : AppCompatActivity() {
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(0, 0, 0, systemBars.bottom)
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom)
             insets
         }
 
         val article = intent.getSerializableExtra("news_data") as? NewsItem
         article?.let { setupUI(it) }
 
-        binding.btnBackCard.setOnClickListener { finish() }
+        binding.btnBack.setOnClickListener { finish() }
     }
 
     private fun setupUI(article: NewsItem) {
@@ -66,7 +66,7 @@ class NewsDetailsActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val isSaved = db.bookmarkDao().isBookmarked(article.title)
             withContext(Dispatchers.Main) {
-                binding.ivBookmark.setImageResource(
+                binding.btnBookmark.setImageResource(
                     if (isSaved) R.drawable.ic_bookmark_filled else R.drawable.ic_bookmark_outline
                 )
             }

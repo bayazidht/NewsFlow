@@ -30,36 +30,42 @@
             app:chipSpacingHorizontal="8dp">
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Global"/>
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="North America" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Europe" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Asia Pacific" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Middle East" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,30 +91,35 @@
             app:chipSpacingHorizontal="8dp">
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Technology" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Business" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sports" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lifestyle" />
 
             <com.google.android.material.chip.Chip
+                app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
