@@ -1,5 +1,6 @@
 package com.bayazidht.newsflow.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,19 +11,25 @@ import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.databinding.FragmentCustomizeBinding
 import com.google.android.material.chip.Chip
 import androidx.core.net.toUri
+import androidx.core.content.edit
 
 class CustomizeFragment : Fragment(R.layout.fragment_customize) {
 
     private var _binding: FragmentCustomizeBinding? = null
     private val binding get() = _binding!!
 
+    private val PREFS_NAME = "NewsPrefs"
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCustomizeBinding.bind(view)
 
+        loadSavedSettings()
+
         binding.btnAboutUs.setOnClickListener {
 
         }
+
         binding.btnPrivacyPolicy.setOnClickListener {
             val url = "https://rss.com/privacy-policy/"
             val builder = CustomTabsIntent.Builder()
@@ -35,34 +42,62 @@ class CustomizeFragment : Fragment(R.layout.fragment_customize) {
     }
 
     private fun handleChipSelections() {
+        val sharedPref = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
         binding.chipGroupRegions.setOnCheckedStateChangeListener { group, checkedIds ->
-            val selectedRegions = checkedIds.map { id ->
-                group.findViewById<Chip>(id).text.toString()
+            val selectedRegion = if (checkedIds.isNotEmpty()) {
+                group.findViewById<Chip>(checkedIds.first()).text.toString()
+            } else {
+                "Global"
             }
-
-            Log.d("CustomizeFragment", "Selected Regions: $selectedRegions")
-
+            sharedPref.edit { putString("user_region", selectedRegion) }
+            Log.d("CustomizeFragment", "Saved Region: $selectedRegion")
         }
 
         binding.chipGroupInterests.setOnCheckedStateChangeListener { group, checkedIds ->
             val selectedInterests = checkedIds.map { id ->
                 group.findViewById<Chip>(id).text.toString()
-            }
+            }.toSet()
 
-            Log.d("CustomizeFragment", "Selected Interests: $selectedInterests")
-
+            sharedPref.edit { putStringSet("selected_interests", selectedInterests) }
+            Log.d("CustomizeFragment", "Saved Interests: $selectedInterests")
         }
     }
 
     private fun setupDarkMode() {
-        binding.switchDarkMode.isChecked =
-            AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+        val sharedPref = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                sharedPref.edit { putBoolean("dark_mode", true) }
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                sharedPref.edit { putBoolean("dark_mode", false) }
+            }
+        }
+    }
+
+    private fun loadSavedSettings() {
+        val sharedPref = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        val isDarkMode = sharedPref.getBoolean("dark_mode", false)
+        binding.switchDarkMode.isChecked = isDarkMode
+
+        val savedRegion = sharedPref.getString("user_region", "Global")
+        for (i in 0 until binding.chipGroupRegions.childCount) {
+            val chip = binding.chipGroupRegions.getChildAt(i) as Chip
+            if (chip.text.toString() == savedRegion) {
+                chip.isChecked = true
+                break
+            }
+        }
+
+        val savedInterests = sharedPref.getStringSet("selected_interests", setOf())
+        for (i in 0 until binding.chipGroupInterests.childCount) {
+            val chip = binding.chipGroupInterests.getChildAt(i) as Chip
+            if (savedInterests?.contains(chip.text.toString()) == true) {
+                chip.isChecked = true
             }
         }
     }

@@ -1,15 +1,40 @@
 package com.bayazidht.newsflow.data
 
 object NewsSources {
-    fun getSourcesByCategory(category: String): List<String> {
-        return categories[category] ?: categories["All"]!!
-    }
-    val categories = mapOf(
-        "All" to listOf(
+
+    val regionSources = mapOf(
+        "Global" to listOf(
             "http://feeds.bbci.co.uk/news/rss.xml",
             "https://www.aljazeera.com/xml/rss/all.xml",
             "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en"
         ),
+        "North America" to listOf(
+            "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+            "https://abcnews.go.com/abcnews/topstories",
+            "http://feeds.foxnews.com/foxnews/latest"
+        ),
+        "Europe" to listOf(
+            "http://feeds.bbci.co.uk/news/rss.xml",
+            "https://www.theguardian.com/world/rss",
+            "https://www.euronews.com/rss?level=vertical&name=news"
+        ),
+        "Asia Pacific" to listOf(
+            "https://www.scmp.com/rss/91/feed",
+            "https://www.japantimes.co.jp/feed/",
+            "https://www.channelnewsasia.com/rssfeed/8395986"
+        ),
+        "Middle East" to listOf(
+            "https://www.aljazeera.com/xml/rss/all.xml",
+            "https://www.khaleejtimes.com/rss-feeds",
+            "https://tbsnews.net/middle-east/rss.xml"
+        ),
+        "Africa" to listOf(
+            "https://allafrica.com/tools/headlines/rdf/latest/main.html",
+            "https://www.africanews.com/rss"
+        )
+    )
+
+    val categories = mapOf(
         "Technology" to listOf(
             "https://www.theverge.com/rss/index.xml",
             "https://techcrunch.com/feed/",
@@ -17,32 +42,39 @@ object NewsSources {
         ),
         "Business" to listOf(
             "https://www.cnbc.com/id/100003114/device/rss/rss.html",
-            "http://feeds.reuters.com/reuters/businessNews",
             "https://fortune.com/feed/"
         ),
         "Sports" to listOf(
             "https://www.espn.com/espn/rss/news",
-            "https://api.foxsports.com/v1/rss?tag=soccer",
             "https://www.skysports.com/rss/12040"
         ),
-        "Lifestyle" to listOf(
-            "https://rss.nytimes.com/services/xml/rss/nyt/Health.xml",
-            "https://www.medicalnewstoday.com/rss/top-news"
-        ),
         "Entertainment" to listOf(
-            "https://www.cnbc.com/id/100003114/device/rss/rss.html",
-            "http://feeds.reuters.com/reuters/businessNews",
-            "https://fortune.com/feed/"
+            "https://variety.com/feed/",
+            "https://www.hollywoodreporter.com/feed/"
         )
     )
 
-    fun getTrendingSources(): List<String> {
-        return listOf(
-            "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
-            "https://www.aljazeera.com/xml/rss/all.xml",
-            "http://feeds.bbci.co.uk/news/rss.xml"
-        )
+    fun getPersonalizedSources(
+        category: String,
+        userRegionChipName: String,
+        userInterests: Set<String>
+    ): List<String> {
+        val sources = mutableListOf<String>()
+
+        if (category == "All") {
+            sources.addAll(regionSources[userRegionChipName] ?: regionSources["Global"]!!)
+            userInterests.forEach { interest ->
+                categories[interest]?.let { sources.addAll(it) }
+            }
+        } else {
+            sources.addAll(categories[category] ?: regionSources["Global"]!!)
+        }
+        return sources.distinct()
     }
 
-
+    fun getTrendingSources(): List<String> = listOf(
+        "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
+        "https://www.aljazeera.com/xml/rss/all.xml",
+        "http://feeds.bbci.co.uk/news/rss.xml"
+    )
 }

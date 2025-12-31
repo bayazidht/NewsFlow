@@ -22,6 +22,8 @@
             android:layout_marginBottom="12dp"/>
 
         <com.google.android.material.chip.ChipGroup
+            app:singleSelection="true"
+            app:selectionRequired="true"
             android:id="@+id/chipGroupRegions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,8 +33,7 @@
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Global"
-                android:checked="true"/>
+                android:text="Global"/>
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.MaterialComponents.Chip.Filter"
@@ -99,13 +100,19 @@
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Science" />
+                android:text="Sports" />
 
             <com.google.android.material.chip.Chip
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Health" />
+                android:text="Lifestyle" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Entertainment" />
 
         </com.google.android.material.chip.ChipGroup>
 
