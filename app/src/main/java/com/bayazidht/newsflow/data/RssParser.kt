@@ -7,8 +7,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 class RssParser {
-    fun fetchRss(urlPath: String): List<NewsArticle> {
-        val articles = mutableListOf<NewsArticle>()
+    fun fetchRss(urlPath: String): List<NewsItem> {
+        val articles = mutableListOf<NewsItem>()
         try {
             val url = URL(urlPath)
             val connection = url.openConnection() as HttpURLConnection
@@ -24,7 +24,7 @@ class RssParser {
             var category = ""
             var title = ""
             var image = ""
-            var pubDate = ""
+            var pubDate = 0L
             var source = "NewsFlow"
             var description = ""
             var link = ""
@@ -68,7 +68,7 @@ class RssParser {
                         if (name.equals("item", true)) {
                             if (title.isNotEmpty()) {
                                 val cleanContent = description.replace(Regex("<[^>]*>"), "").trim()
-                                articles.add(NewsArticle(
+                                articles.add(NewsItem(
                                     title = title.trim(),
                                     category = category.uppercase(),
                                     source = source,
@@ -79,7 +79,7 @@ class RssParser {
                                 ))
                             }
                             insideItem = false
-                            title = ""; image = ""; pubDate = ""; source = "NewsFlow"; description = ""; link = ""; category = "LATEST"
+                            title = ""; image = ""; pubDate = 0L; source = "NewsFlow"; description = ""; link = ""; category = "LATEST"
                         }
                     }
                 }
@@ -92,11 +92,13 @@ class RssParser {
         return articles
     }
 
-    private fun formatRssDate(dateString: String): String {
+    private fun formatRssDate(dateString: String): Long {
         return try {
-            if (dateString.length > 16) dateString.substring(5, 16) else dateString
+            val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", java.util.Locale.ENGLISH)
+            val date = sdf.parse(dateString)
+            date?.time ?: System.currentTimeMillis()
         } catch (_: Exception) {
-            dateString
+            System.currentTimeMillis()
         }
     }
 }

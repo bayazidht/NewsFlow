@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.data.AppDatabase
-import com.bayazidht.newsflow.data.NewsArticle
+import com.bayazidht.newsflow.data.NewsItem
 import com.bumptech.glide.Glide
 import com.bayazidht.newsflow.databinding.ItemNewsCardBinding
 import com.bayazidht.newsflow.ui.activity.NewsDetailsActivity
@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class NewsAdapter(private var newsList: List<NewsArticle>) :
+class NewsAdapter(private var newsList: List<NewsItem>) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
 
     class NewsViewHolder(val binding: ItemNewsCardBinding) : RecyclerView.ViewHolder(binding.root)
@@ -31,7 +31,14 @@ class NewsAdapter(private var newsList: List<NewsArticle>) :
         holder.binding.apply {
             tvNewsTitle.text = article.title
             tvCategory.text = article.category
-            tvSourceAndTime.text = "${article.source} • ${article.time}"
+
+            val relativeTime = android.text.format.DateUtils.getRelativeTimeSpanString(
+                article.time,
+                System.currentTimeMillis(),
+                android.text.format.DateUtils.MINUTE_IN_MILLIS
+            ).toString()
+
+            tvSourceAndTime.text = "${article.source} • ${relativeTime}"
 
             Glide.with(ivNewsImage.context)
                 .load(article.imageUrl)
@@ -79,7 +86,7 @@ class NewsAdapter(private var newsList: List<NewsArticle>) :
 
     override fun getItemCount(): Int = newsList.size
 
-    fun updateData(newList: List<NewsArticle>) {
+    fun updateData(newList: List<NewsItem>) {
         this.newsList = newList
         notifyDataSetChanged()
     }

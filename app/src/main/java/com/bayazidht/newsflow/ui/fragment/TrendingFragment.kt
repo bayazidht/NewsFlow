@@ -6,19 +6,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayazidht.newsflow.R
+import com.bayazidht.newsflow.data.NewsItem
 import com.bayazidht.newsflow.data.RssParser
 import com.bayazidht.newsflow.databinding.FragmentTrendingBinding
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class TrendingFragment : Fragment(R.layout.fragment_trending) {
 
     private var _binding: FragmentTrendingBinding? = null
     private val binding get() = _binding!!
     private lateinit var trendingAdapter: NewsAdapter
+
+    private val trendingSources = listOf(
+        "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
+        "https://www.aljazeera.com/xml/rss/all.xml",
+        "http://feeds.bbci.co.uk/news/rss.xml"
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,24 +44,46 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
 
     private fun loadTrendingNews() {
         binding.progressBar.visibility = View.VISIBLE
+
         lifecycleScope.launch(Dispatchers.IO) {
-            val rssUrl = "https://www.aljazeera.com/xml/rss/all.xml"
-            val newsList = RssParser().fetchRss(rssUrl)
+            val allTrendingNews = mutableListOf<NewsItem>()
+            val parser = RssParser()
+
+            val jobs = trendingSources.map { url ->
+                async {
+                    try {
+                        parser.fetchRss(url)
+                    } catch (_: Exception) {
+                        emptyList()
+                    }
+                }
+            }
+
+            val results = jobs.awaitAll()
+            results.forEach { allTrendingNews.addAll(it) }
+
+            allTrendingNews.sortByDescending { it.time }
+
+            val finalNewsList = allTrendingNews.distinctBy { it.title }
 
             withContext(Dispatchers.Main) {
                 binding.progressBar.visibility = View.GONE
-                if (newsList.isNotEmpty()) {
-                    val hero = newsList[0]
+
+                if (finalNewsList.isNotEmpty()) {
+
+                    val hero = finalNewsList[0]
                     binding.tvHeroTitle.text = hero.title
-                    binding.tvHeroCategory.text = "TRENDING"
+                    binding.tvHeroCategory.text = "BREAKING"
 
                     Glide.with(this@TrendingFragment)
                         .load(hero.imageUrl)
                         .placeholder(R.drawable.news_placeholder)
                         .into(binding.ivHeroImage)
 
-                    val subList = newsList.drop(1)
-                    trendingAdapter.updateData(subList)
+                    if (finalNewsList.size > 1) {
+                        val subList = finalNewsList.drop(1)
+                        trendingAdapter.updateData(subList)
+                    }
                 }
             }
         }

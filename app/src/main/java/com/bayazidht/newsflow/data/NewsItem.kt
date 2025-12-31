@@ -5,11 +5,11 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity(tableName = "bookmarks")
-data class NewsArticle(
+data class NewsItem(
     @PrimaryKey val title: String,
     val category: String,
     val source: String,
-    val time: String,
+    val time: Long,
     val imageUrl: String,
     val content: String,
     val articleUrl: String

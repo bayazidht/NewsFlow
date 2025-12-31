@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface BookmarkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBookmark(article: NewsArticle)
+    suspend fun insertBookmark(article: NewsItem)
 
     @Delete
-    suspend fun deleteBookmark(article: NewsArticle)
+    suspend fun deleteBookmark(article: NewsItem)
 
     @Query("SELECT * FROM bookmarks")
-    fun getAllBookmarks(): Flow<List<NewsArticle>>
+    fun getAllBookmarks(): Flow<List<NewsItem>>
 
     @Query("SELECT EXISTS(SELECT * FROM bookmarks WHERE title = :title)")
     suspend fun isBookmarked(title: String): Boolean
