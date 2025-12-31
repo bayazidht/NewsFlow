@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.data.NewsItem
+import com.bayazidht.newsflow.data.NewsSources
 import com.bayazidht.newsflow.data.RssParser
 import com.bayazidht.newsflow.databinding.FragmentTrendingBinding
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
@@ -19,18 +20,15 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
     private val binding get() = _binding!!
     private lateinit var trendingAdapter: NewsAdapter
 
-    private val trendingSources = listOf(
-        "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
-        "https://www.aljazeera.com/xml/rss/all.xml",
-        "http://feeds.bbci.co.uk/news/rss.xml"
-    )
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTrendingBinding.bind(view)
 
         setupRecyclerView()
-        loadTrendingNews()
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            loadTrendingNews(NewsSources.getTrendingSources())
+        }
+        loadTrendingNews(NewsSources.getTrendingSources())
     }
 
     private fun setupRecyclerView() {
@@ -42,8 +40,8 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
         }
     }
 
-    private fun loadTrendingNews() {
-        binding.progressBar.visibility = View.VISIBLE
+    private fun loadTrendingNews(trendingSources: List<String>) {
+        binding.swipeRefreshLayout.isRefreshing = true
 
         lifecycleScope.launch(Dispatchers.IO) {
             val allTrendingNews = mutableListOf<NewsItem>()
@@ -67,13 +65,12 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
             val finalNewsList = allTrendingNews.distinctBy { it.title }
 
             withContext(Dispatchers.Main) {
-                binding.progressBar.visibility = View.GONE
+                binding.swipeRefreshLayout.isRefreshing = false
 
                 if (finalNewsList.isNotEmpty()) {
 
                     val hero = finalNewsList[0]
                     binding.tvHeroTitle.text = hero.title
-                    binding.tvHeroCategory.text = "BREAKING"
 
                     Glide.with(this@TrendingFragment)
                         .load(hero.imageUrl)

@@ -4,23 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Saved News"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBookmarks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/tvHeader"
         android:clipToPadding="false"
-        android:layout_margin="16dp"/>
+        android:layout_margin="12dp"/>
 
     <LinearLayout
         android:id="@+id/layoutEmpty"

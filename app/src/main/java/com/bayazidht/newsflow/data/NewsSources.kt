@@ -1,7 +1,9 @@
 package com.bayazidht.newsflow.data
 
 object NewsSources {
-
+    fun getSourcesByCategory(category: String): List<String> {
+        return categories[category] ?: categories["All"]!!
+    }
     val categories = mapOf(
         "All" to listOf(
             "http://feeds.bbci.co.uk/news/rss.xml",
@@ -34,7 +36,13 @@ object NewsSources {
         )
     )
 
-    fun getSourcesByCategory(category: String): List<String> {
-        return categories[category] ?: categories["All"]!!
+    fun getTrendingSources(): List<String> {
+        return listOf(
+            "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
+            "https://www.aljazeera.com/xml/rss/all.xml",
+            "http://feeds.bbci.co.uk/news/rss.xml"
+        )
     }
+
+
 }
