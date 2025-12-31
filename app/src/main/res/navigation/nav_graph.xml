@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_customize"
-        android:name="com.bayazidht.newsflow.ui.fragment.AccountFragment"
+        android:name="com.bayazidht.newsflow.ui.fragment.CustomizeFragment"
         android:label="Account"
         tools:layout="@layout/fragment_customize" />
 </navigation>

@@ -11,6 +11,7 @@ import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.data.NewsArticle
 import com.bayazidht.newsflow.databinding.ActivityNewsDetailsBinding
 import com.bumptech.glide.Glide
+import androidx.core.net.toUri
 
 class NewsDetailsActivity : AppCompatActivity() {
 
@@ -35,14 +36,17 @@ class NewsDetailsActivity : AppCompatActivity() {
             binding.tvDetailsCategory.text = it.category
             binding.tvDetailsContent.text = it.content
 
-            Glide.with(this).load(it.imageUrl).into(binding.ivDetailsImage)
+            Glide.with(this)
+                .load(it.imageUrl)
+                .placeholder(R.drawable.news_placeholder)
+                .into(binding.ivDetailsImage)
         }
 
         binding.btnReadMore.setOnClickListener {
             article?.articleUrl?.let { url ->
                 val builder = CustomTabsIntent.Builder()
                 val customTabsIntent = builder.build()
-                customTabsIntent.launchUrl(this, Uri.parse(url))
+                customTabsIntent.launchUrl(this, url.toUri())
             }
         }
 
