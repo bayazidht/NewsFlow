@@ -1,9 +1,10 @@
 package com.bayazidht.newsflow.ui.adapter
 
+import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.data.AppDatabase
@@ -11,10 +12,8 @@ import com.bayazidht.newsflow.data.NewsItem
 import com.bumptech.glide.Glide
 import com.bayazidht.newsflow.databinding.ItemNewsCardBinding
 import com.bayazidht.newsflow.ui.activity.NewsDetailsActivity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.*
 
 class NewsAdapter(private var newsList: List<NewsItem>) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
@@ -28,6 +27,9 @@ class NewsAdapter(private var newsList: List<NewsItem>) :
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
         val article = newsList[position]
+        val context = holder.itemView.context
+        val db = AppDatabase.getDatabase(context)
+
         holder.binding.apply {
             tvNewsTitle.text = article.title
             tvCategory.text = article.category
@@ -43,44 +45,53 @@ class NewsAdapter(private var newsList: List<NewsItem>) :
             Glide.with(ivNewsImage.context)
                 .load(article.imageUrl)
                 .placeholder(R.drawable.news_placeholder)
+                .error(R.drawable.news_placeholder)
                 .into(ivNewsImage)
         }
 
-        val db = AppDatabase.getDatabase(holder.itemView.context)
         CoroutineScope(Dispatchers.IO).launch {
             val isSaved = db.bookmarkDao().isBookmarked(article.title)
             withContext(Dispatchers.Main) {
-                if (isSaved) {
-                    holder.binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_filled)
-                } else {
-                    holder.binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_outline)
-                }
+                holder.binding.btnBookmark.setImageResource(
+                    if (isSaved) R.drawable.ic_bookmark_filled else R.drawable.ic_bookmark_outline
+                )
             }
         }
 
         holder.binding.btnBookmark.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                val isSaved = db.bookmarkDao().isBookmarked(article.title)
-                if (isSaved) {
-                    db.bookmarkDao().deleteBookmark(article)
-                    withContext(Dispatchers.Main) {
-                        holder.binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_outline)
-                        Toast.makeText(holder.itemView.context, "Removed", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    db.bookmarkDao().insertBookmark(article)
-                    withContext(Dispatchers.Main) {
-                        holder.binding.btnBookmark.setImageResource(R.drawable.ic_bookmark_filled)
-                        Toast.makeText(holder.itemView.context, "Saved", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+            toggleBookmark(article, holder, db)
         }
 
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, NewsDetailsActivity::class.java)
+            val intent = Intent(context, NewsDetailsActivity::class.java)
             intent.putExtra("news_data", article)
-            holder.itemView.context.startActivity(intent)
+            context.startActivity(intent)
+        }
+    }
+
+    private fun toggleBookmark(article: NewsItem, holder: NewsViewHolder, db: AppDatabase) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val wasSaved = db.bookmarkDao().isBookmarked(article.title)
+
+            if (wasSaved) db.bookmarkDao().deleteBookmark(article)
+            else db.bookmarkDao().insertBookmark(article)
+
+            withContext(Dispatchers.Main) {
+                holder.binding.btnBookmark.setImageResource(
+                    if (wasSaved) R.drawable.ic_bookmark_outline else R.drawable.ic_bookmark_filled
+                )
+
+                val message = if (wasSaved) "Removed" else "Saved"
+                val snackBar = Snackbar.make(holder.itemView, message, Snackbar.LENGTH_LONG)
+
+                val activity = holder.itemView.context as? Activity
+                snackBar.anchorView = activity?.findViewById(R.id.bottom_nav)
+
+                snackBar.setAction("Undo") {
+                    toggleBookmark(article, holder, db)
+                }
+                snackBar.show()
+            }
         }
     }
 

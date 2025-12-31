@@ -3,7 +3,6 @@ package com.bayazidht.newsflow.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +13,7 @@ import com.bayazidht.newsflow.data.NewsSources
 import com.bayazidht.newsflow.data.RssParser
 import com.bayazidht.newsflow.databinding.FragmentHomeBinding
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -24,6 +24,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var userRegion: String = "Global"
     private var userInterests: Set<String> = emptySet()
+
+    private var lastRegion: String = ""
+    private var lastInterests: Set<String> = emptySet()
+
+    private var cachedNews: List<NewsItem> = emptyList()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,23 +43,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.swipeRefreshLayout.setOnRefreshListener {
             refreshCurrentCategory()
         }
+
+        if (cachedNews.isNotEmpty()) {
+            newsAdapter.updateData(cachedNews)
+            toggleViews(true)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        loadUserPreferences()
-        refreshCurrentCategory()
-    }
 
-    private fun loadUserPreferences() {
         val sharedPref = requireActivity().getSharedPreferences("NewsPrefs", Context.MODE_PRIVATE)
-        if (sharedPref.getBoolean("dark_mode", false)) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        val currentRegion = sharedPref.getString("user_region", "Global") ?: "Global"
+        val currentInterests = sharedPref.getStringSet("selected_interests", emptySet()) ?: emptySet()
+
+        applyDarkMode(sharedPref.getBoolean("dark_mode", false))
+
+        if (currentRegion != lastRegion || currentInterests != lastInterests || cachedNews.isEmpty()) {
+            userRegion = currentRegion
+            userInterests = currentInterests
+            lastRegion = currentRegion
+            lastInterests = currentInterests
+
+            refreshCurrentCategory()
         }
-        userRegion = sharedPref.getString("user_region", "Global") ?: "Global"
-        userInterests = sharedPref.getStringSet("selected_interests", emptySet()) ?: emptySet()
     }
 
     private fun refreshCurrentCategory() {
@@ -63,17 +75,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val categoryName = chip?.text?.toString() ?: "All"
 
         val sources = NewsSources.getPersonalizedSources(categoryName, userRegion, userInterests)
-
         loadMultipleNewsSources(sources)
-    }
-
-    private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter(emptyList())
-        binding.rvNews.apply {
-            adapter = newsAdapter
-            layoutManager = LinearLayoutManager(requireContext())
-            setHasFixedSize(true)
-        }
     }
 
     private fun loadMultipleNewsSources(rssSources: List<String>) {
@@ -89,37 +91,65 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             val jobs = rssSources.map { url ->
                 async {
-                    try {
-                        parser.fetchRss(url)
-                    } catch (_: Exception) {
-                        emptyList()
-                    }
+                    try { parser.fetchRss(url) } catch (_: Exception) { emptyList() }
                 }
             }
 
             val results = jobs.awaitAll()
             results.forEach { allNews.addAll(it) }
-
             allNews.sortByDescending { it.time }
 
             withContext(Dispatchers.Main) {
                 if (_binding != null) {
                     binding.swipeRefreshLayout.isRefreshing = false
                     if (allNews.isNotEmpty()) {
-                        val uniqueNews = allNews.distinctBy { it.title }
-                        newsAdapter.updateData(uniqueNews)
+                        cachedNews = allNews.distinctBy { it.title }
+                        newsAdapter.updateData(cachedNews)
                         binding.rvNews.scrollToPosition(0)
-
-                        binding.rvNews.visibility = View.VISIBLE
-                        binding.layoutEmptyState.visibility = View.GONE
+                        toggleViews(true)
                     } else {
+                        cachedNews = emptyList()
                         newsAdapter.updateData(emptyList())
-                        binding.rvNews.visibility = View.GONE
-                        binding.layoutEmptyState.visibility = View.VISIBLE
-                        Toast.makeText(context, "No news found for $userRegion", Toast.LENGTH_SHORT).show()
+                        toggleViews(false)
+                        showSnackBar("No news found for $userRegion")
                     }
                 }
             }
+        }
+    }
+
+    private fun toggleViews(hasData: Boolean) {
+        if (hasData) {
+            binding.rvNews.visibility = View.VISIBLE
+            binding.layoutEmptyState.visibility = View.GONE
+        } else {
+            binding.rvNews.visibility = View.GONE
+            binding.layoutEmptyState.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showSnackBar(message: String) {
+        val snackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+        snackBar.anchorView = requireActivity().findViewById(R.id.bottom_nav)
+        snackBar.setAction("Retry") {
+            refreshCurrentCategory()
+        }
+        snackBar.show()
+    }
+
+    private fun applyDarkMode(isDark: Boolean) {
+        val mode = if (isDark) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+        if (AppCompatDelegate.getDefaultNightMode() != mode) {
+            AppCompatDelegate.setDefaultNightMode(mode)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        newsAdapter = NewsAdapter(emptyList())
+        binding.rvNews.apply {
+            adapter = newsAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            setHasFixedSize(true)
         }
     }
 

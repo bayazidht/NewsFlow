@@ -1,5 +1,6 @@
 package com.bayazidht.newsflow.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -20,24 +21,37 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
     private val binding get() = _binding!!
     private lateinit var trendingAdapter: NewsAdapter
 
+    private var cachedTrendingNews: List<NewsItem> = emptyList()
+    private var lastRegion: String = ""
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTrendingBinding.bind(view)
 
         setupRecyclerView()
+
         binding.swipeRefreshLayout.setOnRefreshListener {
-            loadTrendingNews(NewsSources.getTrendingSources())
+            fetchTrendingByRegion()
         }
-        loadTrendingNews(NewsSources.getTrendingSources())
     }
 
-    private fun setupRecyclerView() {
-        trendingAdapter = NewsAdapter(emptyList())
-        binding.rvTrending.apply {
-            adapter = trendingAdapter
-            layoutManager = LinearLayoutManager(context)
-            isNestedScrollingEnabled = false
+    override fun onResume() {
+        super.onResume()
+
+        val sharedPref = requireActivity().getSharedPreferences("NewsPrefs", Context.MODE_PRIVATE)
+        val currentRegion = sharedPref.getString("user_region", "Global") ?: "Global"
+
+        if (currentRegion != lastRegion || cachedTrendingNews.isEmpty()) {
+            lastRegion = currentRegion
+            fetchTrendingByRegion()
+        } else {
+            displayNews(cachedTrendingNews)
         }
+    }
+
+    private fun fetchTrendingByRegion() {
+        val sources = NewsSources.regionSources[lastRegion] ?: NewsSources.regionSources["Global"]!!
+        loadTrendingNews(sources)
     }
 
     private fun loadTrendingNews(trendingSources: List<String>) {
@@ -49,11 +63,7 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
 
             val jobs = trendingSources.map { url ->
                 async {
-                    try {
-                        parser.fetchRss(url)
-                    } catch (_: Exception) {
-                        emptyList()
-                    }
+                    try { parser.fetchRss(url) } catch (_: Exception) { emptyList() }
                 }
             }
 
@@ -61,28 +71,44 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
             results.forEach { allTrendingNews.addAll(it) }
 
             allTrendingNews.sortByDescending { it.time }
-
             val finalNewsList = allTrendingNews.distinctBy { it.title }
 
             withContext(Dispatchers.Main) {
-                binding.swipeRefreshLayout.isRefreshing = false
+                if (_binding != null) {
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    if (finalNewsList.isNotEmpty()) {
+                        cachedTrendingNews = finalNewsList
+                        displayNews(finalNewsList)
 
-                if (finalNewsList.isNotEmpty()) {
-
-                    val hero = finalNewsList[0]
-                    binding.tvHeroTitle.text = hero.title
-
-                    Glide.with(this@TrendingFragment)
-                        .load(hero.imageUrl)
-                        .placeholder(R.drawable.news_placeholder)
-                        .into(binding.ivHeroImage)
-
-                    if (finalNewsList.size > 1) {
-                        val subList = finalNewsList.drop(1)
-                        trendingAdapter.updateData(subList)
+                        binding.trendingContent.visibility = View.VISIBLE
+                        binding.layoutEmptyState.visibility = View.GONE
+                    } else {
+                        binding.trendingContent.visibility = View.GONE
+                        binding.layoutEmptyState.visibility = View.VISIBLE
                     }
                 }
             }
+        }
+    }
+
+    private fun displayNews(newsList: List<NewsItem>) {
+        if (newsList.isEmpty()) return
+
+        val hero = newsList[0]
+        binding.tvHeroTitle.text = hero.title
+        Glide.with(this).load(hero.imageUrl).placeholder(R.drawable.news_placeholder).into(binding.ivHeroImage)
+
+        if (newsList.size > 1) {
+            trendingAdapter.updateData(newsList.drop(1))
+        }
+    }
+
+    private fun setupRecyclerView() {
+        trendingAdapter = NewsAdapter(emptyList())
+        binding.rvTrending.apply {
+            adapter = trendingAdapter
+            layoutManager = LinearLayoutManager(context)
+            isNestedScrollingEnabled = false
         }
     }
 

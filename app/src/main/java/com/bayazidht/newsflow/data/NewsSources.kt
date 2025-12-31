@@ -71,10 +71,4 @@ object NewsSources {
         }
         return sources.distinct()
     }
-
-    fun getTrendingSources(): List<String> = listOf(
-        "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en",
-        "https://www.aljazeera.com/xml/rss/all.xml",
-        "http://feeds.bbci.co.uk/news/rss.xml"
-    )
 }
