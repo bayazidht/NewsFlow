@@ -5,14 +5,25 @@ import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class RssParser {
     fun fetchRss(urlPath: String): List<NewsItem> {
         val articles = mutableListOf<NewsItem>()
+        val domainSource = try {
+            URL(urlPath).host.replace("www.", "").split(".")[0].uppercase()
+        } catch (_: Exception) { "NEWS" }
+
         try {
             val url = URL(urlPath)
             val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "GET"
+            connection.apply {
+                connectTimeout = 15000
+                readTimeout = 15000
+                requestMethod = "GET"
+                setRequestProperty("User-Agent", "Mozilla/5.0")
+            }
             connection.connect()
 
             val factory = XmlPullParserFactory.newInstance()
@@ -21,84 +32,105 @@ class RssParser {
             parser.setInput(connection.inputStream, "UTF-8")
 
             var eventType = parser.eventType
-            var category = ""
+            var insideItem = false
             var title = ""
             var image = ""
             var pubDate = 0L
-            var source = "NewsFlow"
             var description = ""
             var link = ""
-            var insideItem = false
+            var category = "GLOBAL"
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                val name = parser.name
+                val tagName = parser.name
+
                 when (eventType) {
                     XmlPullParser.START_TAG -> {
-                        if (name.equals("item", true)) {
+                        if (tagName.equals("item", true)) {
                             insideItem = true
                         } else if (insideItem) {
                             when {
-                                name.equals("category", true) || name.equals("dc:subject", true) -> {
-                                    val cat = parser.nextText()
-                                    if (!cat.isNullOrBlank()) category = cat
+                                tagName.equals("title", true) -> title = parser.nextText()
+                                tagName.equals("link", true) -> link = parser.nextText()
+                                tagName.equals("pubDate", true) -> pubDate = formatRssDate(parser.nextText())
+                                tagName.equals("category", true) -> category = parser.nextText()
+
+                                tagName.equals("enclosure", true) -> {
+                                    val attrUrl = parser.getAttributeValue(null, "url")
+                                    val attrType = parser.getAttributeValue(null, "type")
+                                    if (attrType?.contains("image") == true) image = attrUrl
                                 }
-                                name.equals("title", true) -> title = parser.nextText()
-                                name.equals("pubDate", true) -> {
-                                    val rawDate = parser.nextText()
-                                    pubDate = formatRssDate(rawDate)
+
+                                tagName.contains("media:content", true) ||
+                                        tagName.contains("media:thumbnail", true) -> {
+                                    val attrUrl = parser.getAttributeValue(null, "url")
+                                    if (!attrUrl.isNullOrEmpty()) image = attrUrl
                                 }
-                                name.equals("description", true) || name.equals("content:encoded", true) || name.equals("summary", true) -> {
-                                    description = parser.nextText()
-                                }
-                                name.equals("link", true) -> link = parser.nextText()
-                                name.equals("source", true) -> source = parser.nextText()
-                                name.equals("enclosure", true) || name.equals("media:content", true) -> {
-                                    val urlAttr = parser.getAttributeValue(null, "url")
-                                    if (!urlAttr.isNullOrEmpty()) image = urlAttr
-                                }
-                                name.equals("media:thumbnail", true) -> {
-                                    if (image.isEmpty()) {
-                                        image = parser.getAttributeValue(null, "url") ?: ""
-                                    }
+
+                                tagName.equals("description", true) -> {
+                                    val desc = parser.nextText()
+                                    description = desc
+                                    if (image.isEmpty()) image = extractImageUrlFromHtml(desc)
                                 }
                             }
                         }
                     }
                     XmlPullParser.END_TAG -> {
-                        if (name.equals("item", true)) {
+                        if (tagName.equals("item", true)) {
                             if (title.isNotEmpty()) {
                                 val cleanContent = description.replace(Regex("<[^>]*>"), "").trim()
+
                                 articles.add(NewsItem(
                                     title = title.trim(),
                                     category = category.uppercase(),
-                                    source = source,
+                                    source = domainSource,
                                     time = pubDate,
                                     imageUrl = image,
                                     content = cleanContent,
                                     articleUrl = link
                                 ))
                             }
+                            title = ""
+                            image = ""
+                            pubDate = 0L
+                            description = ""
+                            link = ""
+                            category = "GLOBAL"
                             insideItem = false
-                            title = ""; image = ""; pubDate = 0L; source = "NewsFlow"; description = ""; link = ""; category = "LATEST"
                         }
                     }
                 }
                 eventType = parser.next()
             }
         } catch (e: Exception) {
-            Log.e("RSS_PARSER", "Error: ${e.message}")
-            e.printStackTrace()
+            Log.e("RSS_PARSER", "Error parsing $urlPath: ${e.message}")
         }
         return articles
     }
 
-    private fun formatRssDate(dateString: String): Long {
+    private fun extractImageUrlFromHtml(html: String): String {
         return try {
-            val sdf = java.text.SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", java.util.Locale.ENGLISH)
-            val date = sdf.parse(dateString)
-            date?.time ?: System.currentTimeMillis()
-        } catch (_: Exception) {
-            System.currentTimeMillis()
+            val regex = Regex("src=\"([^\"]+)\"")
+            val match = regex.find(html)
+            var url = match?.groups?.get(1)?.value ?: ""
+            if (url.startsWith("//")) url = "https:$url"
+            url
+        } catch (e: Exception) { "" }
+    }
+
+    private fun formatRssDate(dateString: String): Long {
+        val formats = listOf(
+            "EEE, dd MMM yyyy HH:mm:ss Z",
+            "EEE, dd MMM yyyy HH:mm:ss z",
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "EEE, d MMM yyyy HH:mm:ss Z"
+        )
+        for (format in formats) {
+            try {
+                val sdf = SimpleDateFormat(format, Locale.ENGLISH)
+                val date = sdf.parse(dateString)
+                if (date != null) return date.time
+            } catch (_: Exception) {}
         }
+        return System.currentTimeMillis()
     }
 }

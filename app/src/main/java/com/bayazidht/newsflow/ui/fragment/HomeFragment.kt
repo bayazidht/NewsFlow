@@ -10,6 +10,7 @@ import com.bayazidht.newsflow.databinding.FragmentHomeBinding
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
 import androidx.lifecycle.lifecycleScope
 import com.bayazidht.newsflow.data.NewsItem
+import com.bayazidht.newsflow.data.NewsSources
 import com.bayazidht.newsflow.data.RssParser
 import kotlinx.coroutines.*
 
@@ -19,18 +20,31 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding get() = _binding!!
     private lateinit var newsAdapter: NewsAdapter
 
-    private val rssSources = listOf(
-        "https://www.thedailystar.net/historical/front-page/rss.xml",
-        "https://www.aljazeera.com/xml/rss/all.xml",
-        "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml"
-    )
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
         setupRecyclerView()
-        loadMultipleNewsSources()
+
+        binding.chipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            val checkedId = checkedIds.firstOrNull()
+            if (checkedId != null) {
+                val chip = group.findViewById<com.google.android.material.chip.Chip>(checkedId)
+                val categoryName = chip.text.toString()
+                val sources = NewsSources.getSourcesByCategory(categoryName)
+                loadMultipleNewsSources(sources)
+            }
+        }
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            val checkedChipId = binding.chipGroup.checkedChipId
+            val chip = binding.chipGroup.findViewById<com.google.android.material.chip.Chip>(checkedChipId)
+            val categoryName = chip?.text?.toString() ?: "All"
+            val sources = NewsSources.getSourcesByCategory(categoryName)
+            loadMultipleNewsSources(sources)
+        }
+
+        loadMultipleNewsSources(NewsSources.getSourcesByCategory("All"))
     }
 
     private fun setupRecyclerView() {
@@ -42,8 +56,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun loadMultipleNewsSources() {
-        binding.progressBar.visibility = View.VISIBLE
+    private fun loadMultipleNewsSources(rssSources: List<String>) {
+        binding.swipeRefreshLayout.isRefreshing = true
 
         lifecycleScope.launch(Dispatchers.IO) {
             val allNews = mutableListOf<NewsItem>()
@@ -65,8 +79,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             allNews.sortByDescending { it.time }
 
             withContext(Dispatchers.Main) {
-                binding.progressBar.visibility = View.GONE
-
+                binding.swipeRefreshLayout.isRefreshing = false
                 if (allNews.isNotEmpty()) {
                     val uniqueNews = allNews.distinctBy { it.title }
                     newsAdapter.updateData(uniqueNews)
