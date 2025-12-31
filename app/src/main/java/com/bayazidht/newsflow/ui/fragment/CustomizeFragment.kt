@@ -27,7 +27,7 @@ class CustomizeFragment : Fragment(R.layout.fragment_customize) {
         loadSavedSettings()
 
         binding.btnAboutUs.setOnClickListener {
-
+            showAboutDialog()
         }
 
         binding.btnPrivacyPolicy.setOnClickListener {
@@ -100,6 +100,28 @@ class CustomizeFragment : Fragment(R.layout.fragment_customize) {
                 chip.isChecked = true
             }
         }
+    }
+
+    private fun showAboutDialog() {
+        val message = """
+        NewsFlow is your ultimate destination for instant global and regional news.
+        
+        • Personalized News Feed
+        • Real-time Trending Stories
+        • Offline Bookmarks
+        
+        Developed by: Syed Bayazid Hossain
+        Version: 1.0.0
+    """.trimIndent()
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle("About "+getString(R.string.app_name))
+            .setIcon(R.mipmap.ic_launcher)
+            .setMessage(message)
+            .setPositiveButton("Close") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onDestroyView() {
