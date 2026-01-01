@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="NEWSFLOW"
+            android:text="@string/main_title"
             android:letterSpacing="0.1"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -37,7 +37,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Search"
+                android:contentDescription="@string/search"
                 android:src="@drawable/ic_search" />
 
             <ImageButton
@@ -47,7 +47,7 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Notifications"
+                android:contentDescription="@string/notifications"
                 android:src="@drawable/ic_bell" />
         </LinearLayout>
 
@@ -67,8 +67,6 @@
         android:id="@+id/bottom_nav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="12dp"
-        app:itemIconSize="26dp"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />

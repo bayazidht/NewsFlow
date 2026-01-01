@@ -30,7 +30,6 @@
                 android:id="@+id/tvCategory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="POLITICS"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -41,7 +40,6 @@
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="The actual news title goes here for the user to read."
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -54,7 +52,6 @@
                     android:id="@+id/tvSourceAndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="BBC News • 2h ago"
                     android:textSize="12sp" />
 
                 <ImageView

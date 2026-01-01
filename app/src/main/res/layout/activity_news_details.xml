@@ -52,7 +52,6 @@
                         android:layout_marginEnd="20dp"
                         android:paddingHorizontal="10dp"
                         android:paddingVertical="4dp"
-                        android:text="POLITICS"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -86,7 +85,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="News Title"
                     android:textColor="?attr/colorOnSurface"
                     android:textSize="22sp"
                     android:textStyle="bold"
@@ -97,8 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:alpha="0.7"
-                    android:text="BBC News • 2h ago" />
+                    android:alpha="0.7"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -112,7 +109,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingExtra="8dp"
-                    android:text="Detailed news content..."
                     android:textColor="?attr/colorOnSurface"
                     android:alpha="0.9"
                     android:textSize="17sp" />
@@ -123,7 +119,7 @@
                     android:layout_height="56dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="20dp"
-                    android:text="Read Full Article"
+                    android:text="@string/read_full_article"
                     app:cornerRadius="12dp" />
             </LinearLayout>
         </LinearLayout>

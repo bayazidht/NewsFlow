@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 app:iconifiedByDefault="false"
                 app:searchIcon="@null"
-                app:queryHint="Search"
+                app:queryHint="@string/search"
                 app:queryBackground="@android:color/transparent" />
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="We couldn't find that"
+                android:text="@string/we_couldn_t_find_that"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:alpha="0.6" />
@@ -83,7 +83,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Try searching with different keywords"
+                android:text="@string/try_searching_with_different_keywords"
                 android:textSize="14sp"
                 android:alpha="0.4" />
         </LinearLayout>

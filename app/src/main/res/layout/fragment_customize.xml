@@ -14,7 +14,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Select Regions"
+            android:text="@string/select_regions"
             android:textStyle="bold"
             android:textAllCaps="true"
             android:letterSpacing="0.1"
@@ -34,49 +34,49 @@
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Global"/>
+                android:text="@string/global"/>
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="North America" />
+                android:text="@string/north_america" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Europe" />
+                android:text="@string/europe" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Asia Pacific" />
+                android:text="@string/asia_pacific" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Middle East" />
+                android:text="@string/middle_east" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Africa" />
+                android:text="@string/africa" />
 
         </com.google.android.material.chip.ChipGroup>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Interests"
+            android:text="@string/interests"
             android:textStyle="bold"
             android:textAllCaps="true"
             android:letterSpacing="0.1"
@@ -95,42 +95,42 @@
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Technology" />
+                android:text="@string/technology" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Business" />
+                android:text="@string/business" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sports" />
+                android:text="@string/sports" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lifestyle" />
+                android:text="@string/lifestyle" />
 
             <com.google.android.material.chip.Chip
                 app:checkedIconTint="?attr/colorControlNormal"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Entertainment" />
+                android:text="@string/entertainment" />
 
         </com.google.android.material.chip.ChipGroup>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preferences"
+            android:text="@string/preferences"
             android:textStyle="bold"
             android:textAllCaps="true"
             android:letterSpacing="0.1"
@@ -153,7 +153,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dark Mode"
+                    android:text="@string/dark_mode"
                     android:textSize="16sp"
                     android:layout_centerVertical="true"/>
 
@@ -169,7 +169,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Info &amp; Legal"
+            android:text="@string/info_and_legal"
             android:textStyle="bold"
             android:textSize="12sp"
             android:letterSpacing="0.1"
@@ -195,7 +195,7 @@
                     android:layout_height="60dp"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
-                    android:text="About Us"
+                    android:text="@string/about_us"
                     android:drawableEnd="@drawable/ic_arrow_right"
                     android:textSize="16sp"
                     android:drawableStart="@drawable/ic_info"
@@ -217,7 +217,7 @@
                     android:layout_height="60dp"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp"
-                    android:text="Privacy Policy"
+                    android:text="@string/privacy_policy"
                     android:drawableEnd="@drawable/ic_arrow_right"
                     android:textSize="16sp"
                     android:drawableStart="@drawable/ic_privacy"
@@ -233,7 +233,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Version 1.0.0"
+            android:text="@string/app_version"
             android:gravity="center"
             android:layout_marginTop="32dp"
             android:textSize="12sp"/>

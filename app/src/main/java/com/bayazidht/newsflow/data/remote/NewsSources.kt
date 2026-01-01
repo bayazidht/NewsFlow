@@ -4,19 +4,19 @@ object NewsSources {
 
     val regionSources = mapOf(
         "Global" to listOf(
-            "http://feeds.bbci.co.uk/news/world/rss.xml",
-            "https://www.aljazeera.com/xml/rss/all.xml",
-            "https://www.reutersagency.com/feed/"
+            "https://www.reutersagency.com/feed/",
+            "https://feeds.npr.org/1001/rss.xml",
+            "https://www.theguardian.com/world/rss"
         ),
         "North America" to listOf(
             "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-            "https://www.washingtonpost.com/arcio/rss/category/politics/",
-            "https://feeds.npr.org/1001/rss.xml"
+            "https://www.washingtontimes.com/rss/headlines/news/politics/",
+            "https://feeds.npr.org/1003/rss.xml"
         ),
         "Europe" to listOf(
-            "http://feeds.bbci.co.uk/news/world/rss.xml",
             "https://www.theguardian.com/world/rss",
-            "https://www.euronews.com/rss?level=vertical&name=news"
+            "https://www.euronews.com/rss?level=vertical&name=news",
+            "https://www.france24.com/en/rss"
         ),
         "Asia Pacific" to listOf(
             "https://www.scmp.com/rss/91/feed",
@@ -24,13 +24,13 @@ object NewsSources {
             "https://www.channelnewsasia.com/rssfeed/8395986"
         ),
         "Middle East" to listOf(
-            "https://www.aljazeera.com/xml/rss/all.xml",
             "https://www.khaleejtimes.com/rss-feeds",
+            "https://www.thenationalnews.com/arc/outboundfeeds/rss/",
             "https://tbsnews.net/middle-east/rss.xml"
         ),
         "Africa" to listOf(
-            "https://allafrica.com/tools/headlines/rdf/latest/main.html",
-            "https://www.africanews.com/rss"
+            "https://www.africanews.com/rss",
+            "https://allafrica.com/tools/headlines/rdf/latest/main.html"
         )
     )
 

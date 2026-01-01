@@ -32,7 +32,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No saved news found"
+            android:text="@string/no_saved_news_found"
             android:textSize="16sp"
             android:layout_marginTop="16dp"/>
 

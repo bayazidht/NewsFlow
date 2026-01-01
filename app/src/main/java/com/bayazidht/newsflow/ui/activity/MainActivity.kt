@@ -11,6 +11,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
@@ -31,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right,0)
             insets
         }
 
@@ -63,17 +64,16 @@ class MainActivity : AppCompatActivity() {
             .setConstraints(constraints)
             .build()
 
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-//            "DailyNewsWork",
-//            ExistingPeriodicWorkPolicy.KEEP,
-//            newsWorkRequest
-//        )
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "DailyNewsWork",
+            ExistingPeriodicWorkPolicy.KEEP,
+            newsWorkRequest
+        )
 
-        val testRequest = OneTimeWorkRequestBuilder<NewsWorker>()
-            .setConstraints(constraints)
-            .build()
-
-        WorkManager.getInstance(this).enqueue(testRequest)
+//        val testRequest = OneTimeWorkRequestBuilder<NewsWorker>()
+//            .setConstraints(constraints)
+//            .build()
+//        WorkManager.getInstance(this).enqueue(testRequest)
     }
 
     private fun checkNotificationPermission() {
