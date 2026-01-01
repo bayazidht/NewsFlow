@@ -1,13 +1,14 @@
 package com.bayazidht.newsflow.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.data.AppDatabase
 import com.bayazidht.newsflow.data.NewsItem
 import com.bayazidht.newsflow.databinding.ActivityNotificationBinding
@@ -23,18 +24,28 @@ class NotificationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityNotificationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
-        setupToolbar()
+        binding.btnBack.setOnClickListener {
+            if (isTaskRoot) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
+        binding.btnClearAll.setOnClickListener { showClearAllDialog() }
+
         setupRecyclerView()
         observeNotifications()
-    }
-
-    private fun setupToolbar() {
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.toolbar.setNavigationOnClickListener { finish() }
     }
 
     private fun setupRecyclerView() {
@@ -48,13 +59,11 @@ class NotificationActivity : AppCompatActivity() {
 
     private fun observeNotifications() {
         lifecycleScope.launch {
-            // Flow ব্যবহার করার ফলে ডাটাবেসে নতুন ডাটা আসলেই অটোমেটিক আপডেট হবে
             db.notificationDao().getAllNotifications().collect { historyList ->
                 if (historyList.isNotEmpty()) {
                     binding.rvNotifications.visibility = View.VISIBLE
                     binding.layoutEmptyState.visibility = View.GONE
 
-                    // NotificationNewsItem -> NewsItem রূপান্তর (ম্যাপিং)
                     val adapterList = historyList.map {
                         NewsItem(
                             title = it.title,
@@ -74,19 +83,6 @@ class NotificationActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.notification_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_clear_all) {
-            showClearAllDialog()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun showClearAllDialog() {

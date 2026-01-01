@@ -15,6 +15,7 @@ import com.bayazidht.newsflow.data.NewsSources
 import com.bayazidht.newsflow.data.NotificationItem
 import com.bayazidht.newsflow.data.RssParser
 import com.bayazidht.newsflow.ui.activity.MainActivity
+import com.bayazidht.newsflow.ui.activity.NotificationActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -84,12 +85,12 @@ class NewsWorker(context: Context, workerParams: WorkerParameters) : CoroutineWo
             notificationManager.createNotificationChannel(channel)
         }
 
-        val intent = Intent(applicationContext, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val intent = Intent(applicationContext, NotificationActivity::class.java)
+
+        val pendingIntent: PendingIntent = android.app.TaskStackBuilder.create(applicationContext).run {
+            addNextIntentWithParentStack(intent)
+            getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
-        val pendingIntent = PendingIntent.getActivity(
-            applicationContext, 0, intent, PendingIntent.FLAG_IMMUTABLE
-        )
 
         val notification = NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(R.drawable.ic_newspaper)
