@@ -31,16 +31,6 @@
                     android:layout_height="130dp"
                     android:background="@drawable/gradient_shadow_top" />
 
-                <ImageButton
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="45dp"
-                    android:id="@+id/btnBack"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_back"
-                    app:tint="@color/white" />
-
             </RelativeLayout>
 
             <LinearLayout
@@ -138,4 +128,15 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <ImageButton
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="45dp"
+        android:id="@+id/btnBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_back"
+        app:tint="@color/white" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

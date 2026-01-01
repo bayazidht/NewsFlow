@@ -1,6 +1,7 @@
 package com.bayazidht.newsflow.ui.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import com.bayazidht.newsflow.data.NewsItem
 import com.bayazidht.newsflow.data.NewsSources
 import com.bayazidht.newsflow.data.RssParser
 import com.bayazidht.newsflow.databinding.FragmentTrendingBinding
+import com.bayazidht.newsflow.ui.activity.NewsDetailsActivity
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.*
@@ -94,9 +96,15 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
     private fun displayNews(newsList: List<NewsItem>) {
         if (newsList.isEmpty()) return
 
-        val hero = newsList[0]
-        binding.tvHeroTitle.text = hero.title
-        Glide.with(this).load(hero.imageUrl).placeholder(R.drawable.news_placeholder).into(binding.ivHeroImage)
+        val heroItem = newsList[0]
+        binding.tvHeroTitle.text = heroItem.title
+        Glide.with(this).load(heroItem.imageUrl).placeholder(R.drawable.news_placeholder).into(binding.ivHeroImage)
+        binding.heroCard.setOnClickListener {
+            val intent = Intent(requireContext(), NewsDetailsActivity::class.java).apply {
+                putExtra("news_data", heroItem)
+            }
+            startActivity(intent)
+        }
 
         if (newsList.size > 1) {
             trendingAdapter.updateData(newsList.drop(1))
