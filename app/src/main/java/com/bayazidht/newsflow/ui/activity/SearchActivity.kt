@@ -8,8 +8,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bayazidht.newsflow.data.NewsDataHolder
-import com.bayazidht.newsflow.data.NewsItem
+import com.bayazidht.newsflow.data.repository.NewsDataHolder
+import com.bayazidht.newsflow.data.model.NewsItem
 import com.bayazidht.newsflow.databinding.ActivitySearchBinding
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
 

@@ -1,6 +1,7 @@
-package com.bayazidht.newsflow.data
+package com.bayazidht.newsflow.data.local
 
 import androidx.room.*
+import com.bayazidht.newsflow.data.model.NotificationItem
 import kotlinx.coroutines.flow.Flow
 
 @Dao

@@ -1,20 +1,20 @@
-package com.bayazidht.newsflow.data
+package com.bayazidht.newsflow.data.remote
 
 object NewsSources {
 
     val regionSources = mapOf(
         "Global" to listOf(
-            "http://feeds.bbci.co.uk/news/rss.xml",
+            "http://feeds.bbci.co.uk/news/world/rss.xml",
             "https://www.aljazeera.com/xml/rss/all.xml",
-            "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en"
+            "https://www.reutersagency.com/feed/"
         ),
         "North America" to listOf(
             "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-            "https://abcnews.go.com/abcnews/topstories",
-            "http://feeds.foxnews.com/foxnews/latest"
+            "https://www.washingtonpost.com/arcio/rss/category/politics/",
+            "https://feeds.npr.org/1001/rss.xml"
         ),
         "Europe" to listOf(
-            "http://feeds.bbci.co.uk/news/rss.xml",
+            "http://feeds.bbci.co.uk/news/world/rss.xml",
             "https://www.theguardian.com/world/rss",
             "https://www.euronews.com/rss?level=vertical&name=news"
         ),
@@ -38,19 +38,23 @@ object NewsSources {
         "Technology" to listOf(
             "https://www.theverge.com/rss/index.xml",
             "https://techcrunch.com/feed/",
-            "https://www.wired.com/feed/rss"
+            "https://www.wired.com/feed/rss",
+            "https://www.engadget.com/rss.xml"
         ),
         "Business" to listOf(
             "https://www.cnbc.com/id/100003114/device/rss/rss.html",
-            "https://fortune.com/feed/"
+            "https://fortune.com/feed/",
+            "https://www.forbes.com/business/feed/"
         ),
         "Sports" to listOf(
             "https://www.espn.com/espn/rss/news",
-            "https://www.skysports.com/rss/12040"
+            "https://www.skysports.com/rss/12040",
+            "https://www.cbssports.com/rss/external/headlines-general"
         ),
         "Entertainment" to listOf(
             "https://variety.com/feed/",
-            "https://www.hollywoodreporter.com/feed/"
+            "https://www.hollywoodreporter.com/feed/",
+            "https://www.rollingstone.com/feed/"
         )
     )
 

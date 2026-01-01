@@ -1,6 +1,7 @@
-package com.bayazidht.newsflow.data
+package com.bayazidht.newsflow.data.remote
 
 import android.util.Log
+import com.bayazidht.newsflow.data.model.NewsItem
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.net.HttpURLConnection
@@ -79,15 +80,17 @@ class RssParser {
                             if (title.isNotEmpty()) {
                                 val cleanContent = description.replace(Regex("<[^>]*>"), "").trim()
 
-                                articles.add(NewsItem(
-                                    title = title.trim(),
-                                    category = category.uppercase(),
-                                    source = domainSource,
-                                    time = pubDate,
-                                    imageUrl = image,
-                                    content = cleanContent,
-                                    articleUrl = link
-                                ))
+                                articles.add(
+                                    NewsItem(
+                                        title = title.trim(),
+                                        category = category.uppercase(),
+                                        source = domainSource,
+                                        time = pubDate,
+                                        imageUrl = image,
+                                        content = cleanContent,
+                                        articleUrl = link
+                                    )
+                                )
                             }
                             title = ""
                             image = ""

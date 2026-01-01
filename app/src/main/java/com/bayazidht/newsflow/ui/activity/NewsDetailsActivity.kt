@@ -8,8 +8,8 @@ import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bayazidht.newsflow.R
-import com.bayazidht.newsflow.data.AppDatabase
-import com.bayazidht.newsflow.data.NewsItem
+import com.bayazidht.newsflow.data.local.AppDatabase
+import com.bayazidht.newsflow.data.model.NewsItem
 import com.bayazidht.newsflow.databinding.ActivityNewsDetailsBinding
 import com.bumptech.glide.Glide
 import androidx.core.net.toUri
@@ -51,7 +51,7 @@ class NewsDetailsActivity : AppCompatActivity() {
 
             Glide.with(this@NewsDetailsActivity)
                 .load(article.imageUrl)
-                .placeholder(R.drawable.news_placeholder)
+                .placeholder(R.drawable.placeholder_news)
                 .into(ivDetailsImage)
 
             checkBookmarkStatus(article)

@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayazidht.newsflow.R
-import com.bayazidht.newsflow.data.NewsDataHolder
-import com.bayazidht.newsflow.data.NewsItem
-import com.bayazidht.newsflow.data.NewsSources
-import com.bayazidht.newsflow.data.RssParser
+import com.bayazidht.newsflow.data.repository.NewsDataHolder
+import com.bayazidht.newsflow.data.model.NewsItem
+import com.bayazidht.newsflow.data.remote.NewsSources
+import com.bayazidht.newsflow.data.remote.RssParser
 import com.bayazidht.newsflow.databinding.FragmentHomeBinding
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
 import com.google.android.material.snackbar.Snackbar

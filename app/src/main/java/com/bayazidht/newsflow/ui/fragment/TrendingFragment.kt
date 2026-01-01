@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayazidht.newsflow.R
-import com.bayazidht.newsflow.data.NewsItem
-import com.bayazidht.newsflow.data.NewsSources
-import com.bayazidht.newsflow.data.RssParser
+import com.bayazidht.newsflow.data.model.NewsItem
+import com.bayazidht.newsflow.data.remote.NewsSources
+import com.bayazidht.newsflow.data.remote.RssParser
 import com.bayazidht.newsflow.databinding.FragmentTrendingBinding
 import com.bayazidht.newsflow.ui.activity.NewsDetailsActivity
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
@@ -98,7 +98,7 @@ class TrendingFragment : Fragment(R.layout.fragment_trending) {
 
         val heroItem = newsList[0]
         binding.tvHeroTitle.text = heroItem.title
-        Glide.with(this).load(heroItem.imageUrl).placeholder(R.drawable.news_placeholder).into(binding.ivHeroImage)
+        Glide.with(this).load(heroItem.imageUrl).placeholder(R.drawable.placeholder_news).into(binding.ivHeroImage)
         binding.heroCard.setOnClickListener {
             val intent = Intent(requireContext(), NewsDetailsActivity::class.java).apply {
                 putExtra("news_data", heroItem)

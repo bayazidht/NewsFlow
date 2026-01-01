@@ -1,20 +1,23 @@
-package com.bayazidht.newsflow.ui
+package com.bayazidht.newsflow.worker
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.bayazidht.newsflow.R
-import com.bayazidht.newsflow.data.AppDatabase
-import com.bayazidht.newsflow.data.NewsSources
-import com.bayazidht.newsflow.data.NotificationItem
-import com.bayazidht.newsflow.data.RssParser
-import com.bayazidht.newsflow.ui.activity.MainActivity
+import com.bayazidht.newsflow.data.local.AppDatabase
+import com.bayazidht.newsflow.data.model.NotificationItem
+import com.bayazidht.newsflow.data.remote.NewsSources
+import com.bayazidht.newsflow.data.remote.RssParser
 import com.bayazidht.newsflow.ui.activity.NotificationActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -26,17 +29,24 @@ class NewsWorker(context: Context, workerParams: WorkerParameters) : CoroutineWo
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {
-                val sharedPref = applicationContext.getSharedPreferences("NewsPrefs", Context.MODE_PRIVATE)
+                val sharedPref =
+                    applicationContext.getSharedPreferences("NewsPrefs", Context.MODE_PRIVATE)
                 val userRegion = sharedPref.getString("user_region", "Global") ?: "Global"
-                val userInterests = sharedPref.getStringSet("selected_interests", emptySet()) ?: emptySet()
+                val userInterests =
+                    sharedPref.getStringSet("selected_interests", emptySet()) ?: emptySet()
 
-                val personalizedSources = NewsSources.getPersonalizedSources("All", userRegion, userInterests)
+                val personalizedSources =
+                    NewsSources.getPersonalizedSources("All", userRegion, userInterests)
 
                 if (personalizedSources.isNotEmpty()) {
                     val parser = RssParser()
                     val jobs = personalizedSources.map { url ->
                         async {
-                            try { parser.fetchRss(url) } catch (_: Exception) { emptyList() }
+                            try {
+                                parser.fetchRss(url)
+                            } catch (_: Exception) {
+                                emptyList()
+                            }
                         }
                     }
                     val results = jobs.awaitAll()
@@ -46,7 +56,7 @@ class NewsWorker(context: Context, workerParams: WorkerParameters) : CoroutineWo
                         val latestNews = allNews[0]
                         showNotification(latestNews.source, latestNews.title)
 
-                        val db = AppDatabase.getDatabase(applicationContext)
+                        val db = AppDatabase.Companion.getDatabase(applicationContext)
                         db.notificationDao().insertNotification(
                             NotificationItem(
                                 articleUrl = latestNews.articleUrl,
@@ -87,7 +97,7 @@ class NewsWorker(context: Context, workerParams: WorkerParameters) : CoroutineWo
 
         val intent = Intent(applicationContext, NotificationActivity::class.java)
 
-        val pendingIntent: PendingIntent = android.app.TaskStackBuilder.create(applicationContext).run {
+        val pendingIntent: PendingIntent = TaskStackBuilder.create(applicationContext).run {
             addNextIntentWithParentStack(intent)
             getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         }
@@ -103,10 +113,10 @@ class NewsWorker(context: Context, workerParams: WorkerParameters) : CoroutineWo
             .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (androidx.core.content.ContextCompat.checkSelfPermission(
+            if (ContextCompat.checkSelfPermission(
                     applicationContext,
-                    android.Manifest.permission.POST_NOTIFICATIONS
-                ) != android.content.pm.PackageManager.PERMISSION_GRANTED
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
             ) {
                 return
             }

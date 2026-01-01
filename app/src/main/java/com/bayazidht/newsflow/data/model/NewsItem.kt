@@ -1,10 +1,11 @@
-package com.bayazidht.newsflow.data
+package com.bayazidht.newsflow.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
-@Entity(tableName = "notifications_history")
-data class NotificationItem(
+@Entity(tableName = "bookmarks")
+data class NewsItem(
     @PrimaryKey val articleUrl: String,
     val title: String,
     val category: String,
@@ -12,4 +13,5 @@ data class NotificationItem(
     val time: Long,
     val imageUrl: String,
     val content: String
-)
+): Serializable
+

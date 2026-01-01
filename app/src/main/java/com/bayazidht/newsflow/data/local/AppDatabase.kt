@@ -1,9 +1,11 @@
-package com.bayazidht.newsflow.data
+package com.bayazidht.newsflow.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.bayazidht.newsflow.data.model.NewsItem
+import com.bayazidht.newsflow.data.model.NotificationItem
 
 @Database(entities = [NewsItem::class, NotificationItem::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {

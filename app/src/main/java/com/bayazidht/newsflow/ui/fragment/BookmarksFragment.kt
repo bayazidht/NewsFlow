@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bayazidht.newsflow.R
-import com.bayazidht.newsflow.data.AppDatabase
+import com.bayazidht.newsflow.data.local.AppDatabase
 import com.bayazidht.newsflow.databinding.FragmentBookmarksBinding
 import com.bayazidht.newsflow.ui.adapter.NewsAdapter
 import kotlinx.coroutines.launch

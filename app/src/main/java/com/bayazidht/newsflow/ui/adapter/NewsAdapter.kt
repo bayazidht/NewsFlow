@@ -3,12 +3,11 @@ package com.bayazidht.newsflow.ui.adapter
 import android.app.Activity
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bayazidht.newsflow.R
-import com.bayazidht.newsflow.data.AppDatabase
-import com.bayazidht.newsflow.data.NewsItem
+import com.bayazidht.newsflow.data.local.AppDatabase
+import com.bayazidht.newsflow.data.model.NewsItem
 import com.bumptech.glide.Glide
 import com.bayazidht.newsflow.databinding.ItemNewsCardBinding
 import com.bayazidht.newsflow.ui.activity.NewsDetailsActivity
@@ -44,8 +43,8 @@ class NewsAdapter(private var newsList: List<NewsItem>) :
 
             Glide.with(ivNewsImage.context)
                 .load(article.imageUrl)
-                .placeholder(R.drawable.news_placeholder)
-                .error(R.drawable.news_placeholder)
+                .placeholder(R.drawable.placeholder_news)
+                .error(R.drawable.placeholder_error)
                 .into(ivNewsImage)
         }
 

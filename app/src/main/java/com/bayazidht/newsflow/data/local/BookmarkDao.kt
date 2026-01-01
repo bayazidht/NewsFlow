@@ -1,10 +1,11 @@
-package com.bayazidht.newsflow.data
+package com.bayazidht.newsflow.data.local
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.bayazidht.newsflow.data.model.NewsItem
 import kotlinx.coroutines.flow.Flow
 
 @Dao

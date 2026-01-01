@@ -11,14 +11,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bayazidht.newsflow.R
 import com.bayazidht.newsflow.databinding.ActivityMainBinding
-import com.bayazidht.newsflow.ui.NewsWorker
+import com.bayazidht.newsflow.worker.NewsWorker
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
